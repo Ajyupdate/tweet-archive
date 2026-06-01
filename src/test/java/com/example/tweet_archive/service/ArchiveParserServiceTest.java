@@ -6,12 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.nio.file.Path;
 import java.util.List;
 
-import org.hibernate.boot.archive.spi.ArchiveException;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 
+import com.example.tweet_archive.exception.ArchiveParseException;
 import com.example.tweet_archive.model.Tweet;
 import com.example.tweet_archive.service.ArchiveParserService.ArchiveParser;
 
@@ -42,7 +43,7 @@ class ArchiveParserServiceTest {
 
         Path path = resource.getFile().toPath();
 
-        assertThrows(ArchiveException.class, () -> archiveParser.parseArchive(path));
+        assertThrows(ArchiveParseException.class, () -> archiveParser.parseArchive(path));
     }
 
     @Test
@@ -51,7 +52,7 @@ class ArchiveParserServiceTest {
 
         Path path = resource.getFile().toPath();
 
-        assertThrows(ArchiveException.class, () -> archiveParser.parseArchive(path));
+        assertThrows(ArchiveParseException.class, () -> archiveParser.parseArchive(path));
     }
 
 }
