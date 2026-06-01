@@ -1,4 +1,4 @@
-### Version 1 – Archive Parsing Foundation
+### Version 1(01, June 2026) – Archive Parsing Foundation
 
 * Built the archive ingestion pipeline: file reading → wrapper stripping → JSON parsing.
 * Converted Twitter archive entries into `Tweet` domain objects via Jackson deserialization.
