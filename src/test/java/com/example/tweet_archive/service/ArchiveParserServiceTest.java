@@ -50,7 +50,7 @@ class ArchiveParserServiceTest {
     void shouldThrowExceptionWhenInvalidJson() throws Exception{
         ClassPathResource resource = new ClassPathResource("invalid-json.js");
 
-        Path path = resource.getFile().toPath();
+        Path path = resource.getFile().toPath(); 
 
         assertThrows(ArchiveParseException.class, () -> archiveParser.parseArchive(path));
     }
