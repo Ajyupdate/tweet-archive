@@ -7,5 +7,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "audit")
 public record AuditProperties(
     List<String> criteria,
-    int batchSize
+    int batchSize,
+    String outputPath
 ){}
