@@ -24,6 +24,14 @@ public class Tweet {
     @JsonProperty("favorite_count")
     private String favoriteCount;
 
+    public Tweet() {}
+
+    public Tweet(String id, String fullText, String createdAt) {
+        this.id = id;
+        this.fullText = fullText;
+        this.createdAt = createdAt;
+    }
+
     public String getId() {
         return id;
     }
