@@ -56,15 +56,24 @@ public class AuditOrchestrator {
                 batch.stream()
                     .map(tweet -> geminiService 
                                     .evaluateTweet(tweet)
-                                    .exceptionally(ex ->
-                                        new AuditResult(
+                                    .exceptionally(ex -> {
+                                        Throwable rootCause = ex;
+                                        while (rootCause.getCause() != null && rootCause.getCause() != rootCause) {
+                                            rootCause = rootCause.getCause();
+                                        }
+
+                                        String detail = rootCause.getMessage();
+                                        if (detail == null || detail.isBlank()) {
+                                            detail = ex.getMessage();
+                                        }
+
+                                        return new AuditResult(
                                             tweet.getId(),
                                             tweet.getFullText(),
                                             false,
-                                            "Evaluation failed: " +
-                                                (ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage())
-)
-                                    )
+                                            "Evaluation failed: " + detail
+                                        );
+                                    })
                     ).toList();
             
             CompletableFuture

@@ -7,6 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 import com.example.tweet_archive.model.AuditResult;
 import com.example.tweet_archive.model.JobStatus;
@@ -15,6 +16,7 @@ import com.example.tweet_archive.service.ArchiveParserService.ArchiveParser;
 import com.example.tweet_archive.service.AuditOrchestrator.AuditOrchestrator;
 import com.example.tweet_archive.service.CsvExportService.CsvExportService;
 
+@Service
 public class AuditJobService {
     private static final Logger logger = LoggerFactory.getLogger(AuditJobService.class);
 
@@ -43,6 +45,7 @@ public class AuditJobService {
     // exception would silently disappear. We catch everything and
     // mark the job FAILED with the error message instead.
 
+    
     @Async("taskExecutor")
     public void runJob(JobStatus job, Path archivePath){
         try {
@@ -52,6 +55,7 @@ public class AuditJobService {
 
             //Step 2 - parse the archive
             List<Tweet> tweets = archiveParser.parseArchive(archivePath);
+          
             job.setTotalTweets(tweets.size());
             logger.info("Job {} parsed {} tweets", job.getJobId(), tweets.size());
 
@@ -81,8 +85,27 @@ public class AuditJobService {
             // We never rethrow — there's no caller on this thread.
             logger.error("Job {} failed {}", job.getJobId(), e.getMessage(), e);
             job.setStatus(JobStatus.Status.FAILED);
-            job.setErrorMessage(e.getMessage());
+            job.setErrorMessage(buildErrorMessage(e));
             job.setCompletedAt(LocalDateTime.now());
         }
+    }
+
+    private String buildErrorMessage(Throwable error) {
+        if (error == null) {
+            return null;
+        }
+
+        String message = error.getMessage();
+        Throwable cause = error.getCause();
+
+        if (cause != null && cause.getMessage() != null && !cause.getMessage().isBlank()) {
+            if (message == null || message.isBlank()) {
+                message = cause.getMessage();
+            } else {
+                message = message + " | cause: " + cause.getMessage();
+            }
+        }
+
+        return message;
     }
 }

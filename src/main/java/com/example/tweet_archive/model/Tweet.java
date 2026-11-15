@@ -2,7 +2,8 @@ package com.example.tweet_archive.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Tweet {
     @NotNull
     @JsonProperty("id_str")
@@ -23,6 +24,11 @@ public class Tweet {
     @NotNull
     @JsonProperty("favorite_count")
     private String favoriteCount;
+
+    // @Override
+    // public String toString() {
+    //     return "Tweet{id=" + id + ", text=" + fullText + "}";
+    // }
 
     public Tweet() {}
 

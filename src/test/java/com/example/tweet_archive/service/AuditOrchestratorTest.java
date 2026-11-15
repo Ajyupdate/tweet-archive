@@ -34,7 +34,8 @@ class AuditOrchestratorTest {
         AuditProperties properties = 
             new AuditProperties(
                 List.of("offensive content"),
-                10
+                10,
+                "target/audit-output"
             );
         
         auditOrchestrator = 

@@ -66,8 +66,27 @@ public class GeminiService {
             
             return CompletableFuture.completedFuture(result);
         }catch (Exception e){
-            throw new GeminiApiException("Gemini evaluation failed", e);
+            throw new GeminiApiException(buildGeminiErrorMessage(e), e);
         }
+    }
+
+    private String buildGeminiErrorMessage(Exception error) {
+        if (error == null) {
+            return "Gemini evaluation failed";
+        }
+
+        Throwable cause = error.getCause();
+        String message = error.getMessage();
+
+        if (cause != null && cause.getMessage() != null && !cause.getMessage().isBlank()) {
+            return "Gemini evaluation failed: " + cause.getMessage();
+        }
+
+        if (message != null && !message.isBlank()) {
+            return "Gemini evaluation failed: " + message;
+        }
+
+        return "Gemini evaluation failed";
     }
 
     private String buildPrompt(Tweet tweet){
