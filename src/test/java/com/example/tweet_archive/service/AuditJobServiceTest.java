@@ -71,6 +71,19 @@ class AuditJobServiceTest {
         assertNotNull(job.getCompletedAt());
     }
 
+    @Test
+    void runJob_includesCauseMessage_onFailure() {
+        JobStatus job = new JobStatus("job-cause");
+        when(archiveParser.parseArchive(fakePath))
+            .thenThrow(new RuntimeException("Failed to parse archive", new IllegalArgumentException("Unexpected end of JSON input")));
+
+        auditJobService.runJob(job, fakePath);
+
+        assertEquals(JobStatus.Status.FAILED, job.getStatus());
+        assertEquals("Failed to parse archive | cause: Unexpected end of JSON input", job.getErrorMessage());
+        assertNotNull(job.getCompletedAt());
+    }
+
      @Test
     void runJob_setsRunningStatus_beforeProcessing() {
         // This verifies the PENDING -> RUNNING transition happens

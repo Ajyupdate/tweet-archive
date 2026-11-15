@@ -75,6 +75,7 @@ public class ArchiveParser {
             List<TweetWrapper> wrappers = objectMapper.readValue(jsonContent, new com.fasterxml.jackson.core.type.TypeReference<List<TweetWrapper>>(){});
             return wrappers.stream().map(TweetWrapper::getTweet).filter(Objects::nonNull).toList();
         } catch (java.io.IOException e) {
+           
             throw new ArchiveParseException("Failed to parse twitter archive json", e);
         }
     }

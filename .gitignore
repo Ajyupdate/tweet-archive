@@ -34,3 +34,4 @@ build/
 
 ### application ###
 **/application.yml
+/output/
